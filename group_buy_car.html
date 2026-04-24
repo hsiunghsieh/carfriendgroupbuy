@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ffffff">
-<title>車友團購記錄</title>
+<title>團購記錄</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -21,29 +21,24 @@
 }
 html,body{height:100%;background:var(--bg3);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:var(--text);font-size:16px;line-height:1.5;overflow-x:hidden}
 #app{display:flex;flex-direction:column;min-height:100%;max-width:540px;margin:0 auto;background:var(--bg3)}
-
-/* Top bar */
 .topbar{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .topbar-title{font-size:18px;font-weight:600;letter-spacing:-0.3px}
-.topbar-sub{font-size:12px;color:var(--text3)}
-
-/* Bottom nav */
+.sync-status{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:background 0.3s}
+.sync-dot.ok{background:#3B6D11}
+.sync-dot.syncing{background:#E6A817;animation:pulse 1s infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:var(--bg);border-top:0.5px solid var(--border);display:flex;height:var(--nav-h);z-index:100;padding-bottom:env(safe-area-inset-bottom,0)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:8px 4px;border:none;background:none;color:var(--text3);font-size:10px;font-family:inherit;transition:color 0.15s}
 .nav-item.active{color:var(--blue)}
 .nav-icon{font-size:22px;line-height:1}
 .nav-label{font-size:10px;font-weight:500}
-
-/* Pages */
 .pages{flex:1;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0) + 8px)}
 .page{display:none;padding:12px 12px 0}
 .page.active{display:block}
-
-/* Cards */
 .card{background:var(--bg);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px}
-
-/* Form elements */
 .field{margin-bottom:12px}
 .field label,.field-label{display:block;font-size:13px;color:var(--text2);margin-bottom:5px;font-weight:500}
 input[type=text],input[type=date],input[type=number],input[type=url],select,textarea{
@@ -54,8 +49,6 @@ input[type=text],input[type=date],input[type=number],input[type=url],select,text
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,0.12)}
 textarea{resize:vertical;min-height:72px;line-height:1.5}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b9b97' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-
-/* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:var(--radius-sm);font-size:15px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;transition:all 0.12s;min-height:44px;-webkit-appearance:none}
 .btn:active{opacity:0.7;transform:scale(0.97)}
 .btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
@@ -64,66 +57,43 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .btn-sm{padding:8px 14px;font-size:14px;min-height:36px}
 .btn-block{width:100%}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-
-/* Badges */
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
 .badge-blue{background:var(--blue-bg);color:var(--blue-text)}
 .badge-green{background:var(--green-bg);color:var(--green-text)}
 .badge-gray{background:var(--bg2);color:var(--text2)}
-
-/* Divider */
 .divider{height:0.5px;background:var(--border);margin:14px 0}
-
-/* Section header */
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-
-/* Org card */
 .org-card{background:var(--bg2);border-radius:var(--radius);padding:14px;margin-bottom:10px}
 .org-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .avatar{width:44px;height:44px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--blue-text);flex-shrink:0}
 .org-name{font-size:16px;font-weight:600}
 .org-meta{font-size:13px;color:var(--text2);line-height:1.8}
 .org-actions{display:flex;gap:8px;margin-top:10px}
-
-/* Group card */
 .group-card{background:var(--bg);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .group-card-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
 .group-card-body{padding:0 16px 16px;display:none}
 .group-card-body.open{display:block}
 .group-name-input{font-size:17px;font-weight:600;border:none;background:transparent;color:var(--text);font-family:inherit;flex:1;min-width:0;padding:0}
 .group-name-input:focus{outline:none}
-
-/* Item rows */
 .item-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;background:var(--bg2);border-radius:var(--radius-sm);padding:10px}
 .item-row .field{margin:0;flex:1}
 .item-row .field:first-child{flex:2}
-.item-row .field:nth-child(2){flex:1;min-width:70px}
-
-/* Person rows */
 .person-row{background:var(--bg2);border-radius:var(--radius-sm);padding:10px;margin-bottom:8px}
 .person-row-top{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .person-row-top input[type=text]{flex:1}
 .person-row-bottom{display:flex;gap:8px;align-items:center}
 .person-row-bottom select{flex:1}
 .person-row-bottom input[type=number]{width:64px;min-width:64px;text-align:center}
-
-/* Summary */
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
 .summary-item{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 12px;text-align:center}
 .summary-label{font-size:11px;color:var(--text3);margin-bottom:4px}
 .summary-value{font-size:20px;font-weight:700;letter-spacing:-0.5px}
-
-/* Person totals */
 .person-total-row{display:flex;align-items:baseline;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)}
 .person-total-row:last-child{border-bottom:none}
 .person-total-name{font-weight:600;font-size:15px}
 .person-total-detail{font-size:12px;color:var(--text2);margin-top:2px}
 .person-total-amt{font-size:17px;font-weight:700;color:var(--blue-text)}
-
-/* Export */
 .export-box{background:var(--bg2);border-radius:var(--radius-sm);padding:12px;font-size:12px;font-family:monospace;white-space:pre-wrap;max-height:180px;overflow-y:auto;margin-top:10px;color:var(--text2);line-height:1.6}
-
-/* History */
 .hist-card{background:var(--bg);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .hist-header{padding:14px 16px;cursor:pointer}
 .hist-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
@@ -142,61 +112,60 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .check-row-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
 .check-row-amt{font-size:15px;font-weight:700}
 .check-row-amt.paid{color:var(--text3)}
-
-/* Empty state */
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
 .empty-icon{font-size:40px;margin-bottom:12px}
 .empty-text{font-size:15px}
-
-/* FAB */
 .fab{position:fixed;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0));right:16px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(24,95,165,0.4);z-index:90;transition:all 0.15s}
 .fab:active{transform:scale(0.92)}
-
-/* Sheet modal */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .sheet-overlay.open{display:flex}
 .sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;padding:0 16px calc(env(safe-area-inset-bottom,0) + 24px);animation:slideUp 0.25s ease}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 16px}
 .sheet-title{font-size:18px;font-weight:700;margin-bottom:16px}
-
-/* Toast */
 .toast{position:fixed;bottom:calc(var(--nav-h) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a18;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;z-index:300;opacity:0;transition:all 0.2s;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;gap:16px}
+.loading-overlay.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:15px;color:var(--text2)}
 </style>
 </head>
 <body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">載入資料中…</div>
+</div>
+
 <div id="app">
   <div class="topbar">
-    <div>
-      <div class="topbar-title">🛍 車友團購記錄</div>
+    <div class="topbar-title">🛍 團購記錄</div>
+    <div class="sync-status">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">同步中</span>
     </div>
-    <div id="topbar-right"></div>
   </div>
-
   <div class="pages">
     <div id="page-contacts" class="page active"></div>
     <div id="page-active" class="page"></div>
     <div id="page-history" class="page"></div>
   </div>
-
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('contacts')" id="nav-contacts">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">團主</span>
+      <span class="nav-icon">👤</span><span class="nav-label">團主</span>
     </button>
     <button class="nav-item" onclick="switchTab('active')" id="nav-active">
-      <span class="nav-icon">🛒</span>
-      <span class="nav-label">開團中</span>
+      <span class="nav-icon">🛒</span><span class="nav-label">開團中</span>
     </button>
     <button class="nav-item" onclick="switchTab('history')" id="nav-history">
-      <span class="nav-icon">📦</span>
-      <span class="nav-label">歷史</span>
+      <span class="nav-icon">📦</span><span class="nav-label">歷史</span>
     </button>
   </nav>
 </div>
 
-<!-- Add Org Sheet -->
+<!-- Org Sheet -->
 <div class="sheet-overlay" id="org-sheet" onclick="closeOrgSheet(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -206,13 +175,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="field"><label>收款方式</label><input type="text" id="org-payment" placeholder="LINE Pay、現金、轉帳…"></div>
     <div class="field"><label>交貨方式</label><input type="text" id="org-delivery" placeholder="面交、宅配、超商取貨…"></div>
     <div class="field"><label>備註</label><textarea id="org-note" placeholder="其他說明…"></textarea></div>
-    <div class="btn-row">
-      <button class="btn btn-primary btn-block" onclick="saveOrg()">儲存</button>
-    </div>
+    <div class="btn-row"><button class="btn btn-primary btn-block" onclick="saveOrg()">儲存</button></div>
   </div>
 </div>
 
-<!-- Add Group Sheet -->
+<!-- Group Sheet -->
 <div class="sheet-overlay" id="group-sheet" onclick="closeGroupSheet(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -222,27 +189,77 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="field"><label>選擇團主</label><select id="new-group-org"><option value="">-- 選擇團主 --</option></select></div>
     <div class="field"><label>開團資訊網址</label><input type="url" id="new-group-url" placeholder="https://..."></div>
     <div class="field"><label>備註</label><textarea id="new-group-note" placeholder="補充說明…"></textarea></div>
-    <div class="btn-row">
-      <button class="btn btn-primary btn-block" onclick="saveNewGroup()">建立開團</button>
-    </div>
+    <div class="btn-row"><button class="btn btn-primary btn-block" onclick="saveNewGroup()">建立開團</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-let state={organizers:[],activeGroups:[],history:[]};
-let currentTab='contacts';
-let editingOrgId=null;
+const API_URL = 'https://script.google.com/macros/s/AKfycbzEJb-alknvxie4sWUk6kkdfk9Gcc_IEoMgnQ6CQWCJo5SShMuz7c191wtZzn5X9Cre/exec';
 
-function saveState(){try{localStorage.setItem('gb2',JSON.stringify(state))}catch(e){}}
-function loadState(){try{const d=localStorage.getItem('gb2');if(d)state=JSON.parse(d)}catch(e){}}
-loadState();
+let state = {organizers:[], activeGroups:[], history:[]};
+let currentTab = 'contacts';
+let editingOrgId = null;
+let saveTimer = null;
+let isSaving = false;
+
+// ── Sync ──
+function setSyncStatus(status){
+  const dot=document.getElementById('sync-dot');
+  const label=document.getElementById('sync-label');
+  if(status==='ok'){dot.className='sync-dot ok';label.textContent='已同步';}
+  else if(status==='syncing'){dot.className='sync-dot syncing';label.textContent='同步中…';}
+  else{dot.className='sync-dot error';label.textContent='同步失敗';}
+}
+
+async function loadFromSheets(){
+  try{
+    const res = await fetch(API_URL+'?action=load');
+    const text = await res.text();
+    const data = JSON.parse(text);
+    if(data && data.organizers !== undefined) state = data;
+    setSyncStatus('ok');
+  } catch(e){
+    console.error(e);
+    // fallback to localStorage
+    try{const d=localStorage.getItem('gb_backup');if(d)state=JSON.parse(d);}catch(e2){}
+    setSyncStatus('error');
+    showToast('無法連線，使用本機暫存資料');
+  }
+  document.getElementById('loading-overlay').classList.add('hidden');
+  renderCurrentTab();
+}
+
+async function saveToSheets(){
+  if(isSaving){saveTimer=setTimeout(saveToSheets,1000);return;}
+  isSaving=true;
+  setSyncStatus('syncing');
+  // backup locally
+  try{localStorage.setItem('gb_backup',JSON.stringify(state));}catch(e){}
+  try{
+    await fetch(API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action:'save', data: JSON.stringify(state)})
+    });
+    setSyncStatus('ok');
+  } catch(e){
+    setSyncStatus('error');
+    showToast('⚠️ 儲存失敗，請檢查網路');
+  }
+  isSaving=false;
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveToSheets, 800);
+}
 
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
 function switchTab(tab){
@@ -252,29 +269,29 @@ function switchTab(tab){
   document.getElementById('page-'+tab).classList.add('active');
   document.getElementById('nav-'+tab).classList.add('active');
   const fab=document.getElementById('main-fab');
-  if(tab==='contacts'){renderContacts();fab&&(fab.style.display='flex')}
-  if(tab==='active'){renderActive();fab&&(fab.style.display='flex')}
-  if(tab==='history'){renderHistory();fab&&(fab.style.display='none')}
-  updateTopbarRight();
+  if(tab==='history'){if(fab)fab.style.display='none';}
+  else{if(fab)fab.style.display='flex';}
+  renderCurrentTab();
 }
 
-function updateTopbarRight(){
-  const el=document.getElementById('topbar-right');
-  if(currentTab==='history'){el.innerHTML='';return;}
+function renderCurrentTab(){
+  if(currentTab==='contacts')renderContacts();
+  else if(currentTab==='active')renderActive();
+  else renderHistory();
 }
 
 // FAB
-document.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded',()=>{
   const fab=document.createElement('button');
   fab.className='fab';fab.id='main-fab';fab.innerHTML='＋';
   fab.onclick=()=>{if(currentTab==='contacts')openOrgSheet();else if(currentTab==='active')openGroupSheet();};
   document.body.appendChild(fab);
+  loadFromSheets();
 });
 
-// Org Sheet
+// ── Organizers ──
 function openOrgSheet(id=null){
   editingOrgId=id;
-  const sheet=document.getElementById('org-sheet');
   document.getElementById('org-sheet-title').textContent=id?'編輯團主':'新增團主';
   if(id){
     const o=state.organizers.find(o=>o.id===id);
@@ -288,12 +305,9 @@ function openOrgSheet(id=null){
   } else {
     ['org-name','org-contact','org-payment','org-delivery','org-note'].forEach(id=>document.getElementById(id).value='');
   }
-  sheet.classList.add('open');
-  setTimeout(()=>document.getElementById('org-name').focus(),300);
+  document.getElementById('org-sheet').classList.add('open');
 }
-function closeOrgSheet(e){
-  if(e.target===document.getElementById('org-sheet'))document.getElementById('org-sheet').classList.remove('open');
-}
+function closeOrgSheet(e){if(e.target===document.getElementById('org-sheet'))document.getElementById('org-sheet').classList.remove('open');}
 function saveOrg(){
   const name=document.getElementById('org-name').value.trim();
   if(!name)return showToast('請填寫姓名');
@@ -306,22 +320,21 @@ function saveOrg(){
     state.organizers.push({id:Date.now(),...data});
     showToast('已新增團主');
   }
-  saveState();document.getElementById('org-sheet').classList.remove('open');renderContacts();
+  scheduleSave();
+  document.getElementById('org-sheet').classList.remove('open');
+  renderContacts();
 }
-
+function deleteOrg(id){
+  if(!confirm('確定刪除此團主？'))return;
+  state.organizers=state.organizers.filter(o=>o.id!==id);
+  scheduleSave();renderContacts();
+}
 function renderContacts(){
   const el=document.getElementById('page-contacts');
-  if(!state.organizers.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">尚無團主資料<br>點右下角＋新增</div></div>`;return;
-  }
+  if(!state.organizers.length){el.innerHTML=`<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">尚無團主資料<br>點右下角＋新增</div></div>`;return;}
   el.innerHTML=state.organizers.map(o=>`
     <div class="org-card">
-      <div class="org-top">
-        <div class="avatar">${o.name.slice(0,2)}</div>
-        <div>
-          <div class="org-name">${o.name}</div>
-        </div>
-      </div>
+      <div class="org-top"><div class="avatar">${o.name.slice(0,2)}</div><div><div class="org-name">${o.name}</div></div></div>
       <div class="org-meta">
         ${o.contact?`📱 ${o.contact}<br>`:''}
         ${o.payment?`💳 收款：${o.payment}<br>`:''}
@@ -335,22 +348,15 @@ function renderContacts(){
     </div>
   `).join('');
 }
-function deleteOrg(id){
-  if(!confirm('確定刪除此團主？'))return;
-  state.organizers=state.organizers.filter(o=>o.id!==id);
-  saveState();renderContacts();
-}
 
-// Group Sheet
+// ── Active Groups ──
 function openGroupSheet(){
   const sel=document.getElementById('new-group-org');
   sel.innerHTML='<option value="">-- 選擇團主（可留空）--</option>'+state.organizers.map(o=>`<option value="${o.id}">${o.name}</option>`).join('');
   ['new-group-name','new-group-date','new-group-url','new-group-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('group-sheet').classList.add('open');
 }
-function closeGroupSheet(e){
-  if(e.target===document.getElementById('group-sheet'))document.getElementById('group-sheet').classList.remove('open');
-}
+function closeGroupSheet(e){if(e.target===document.getElementById('group-sheet'))document.getElementById('group-sheet').classList.remove('open');}
 function saveNewGroup(){
   const name=document.getElementById('new-group-name').value.trim();
   if(!name)return showToast('請填寫團購名稱');
@@ -362,15 +368,14 @@ function saveNewGroup(){
     note:document.getElementById('new-group-note').value,
     items:[],orders:[]
   });
-  saveState();document.getElementById('group-sheet').classList.remove('open');
+  scheduleSave();
+  document.getElementById('group-sheet').classList.remove('open');
   renderActive();showToast('開團建立成功');
 }
 
 function renderActive(){
   const el=document.getElementById('page-active');
-  if(!state.activeGroups.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon">🛒</div><div class="empty-text">尚無開團中<br>點右下角＋新增開團</div></div>`;return;
-  }
+  if(!state.activeGroups.length){el.innerHTML=`<div class="empty"><div class="empty-icon">🛒</div><div class="empty-text">尚無開團中<br>點右下角＋新增開團</div></div>`;return;}
   el.innerHTML=state.activeGroups.map(g=>buildGroupCard(g)).join('');
 }
 
@@ -379,22 +384,19 @@ function buildGroupCard(g){
   const totalAmt=g.orders.reduce((s,o)=>{const it=g.items[o.itemIdx];return s+(it?parseFloat(it.price||0)*parseInt(o.qty||0):0);},0);
   const totalQty=g.orders.reduce((s,o)=>s+parseInt(o.qty||0),0);
   const people=[...new Set(g.orders.map(o=>o.person).filter(Boolean))];
-
   const itemsHtml=g.items.map((it,i)=>`
     <div class="item-row">
-      <div class="field"><label class="field-label">商品名稱</label><input type="text" value="${it.name}" oninput="updateItem(${g.id},${i},'name',this.value)" placeholder="商品名稱"></div>
+      <div class="field"><label class="field-label">商品名稱</label><input type="text" value="${esc(it.name)}" oninput="updateItem(${g.id},${i},'name',this.value)" placeholder="商品名稱"></div>
       <div class="field"><label class="field-label">單價</label><input type="number" value="${it.price}" oninput="updateItem(${g.id},${i},'price',this.value)" placeholder="0" min="0"></div>
       <div style="display:flex;align-items:flex-end;padding-bottom:1px"><button class="btn btn-danger btn-sm" onclick="removeItem(${g.id},${i})" style="min-height:44px;padding:0 12px">✕</button></div>
     </div>
-    <div style="padding:0 2px 8px;margin-top:-4px"><input type="text" value="${it.spec||''}" oninput="updateItem(${g.id},${i},'spec',this.value)" placeholder="規格/說明（可留空）" style="background:var(--bg3)"></div>
+    <div style="padding:0 2px 8px;margin-top:-4px"><input type="text" value="${esc(it.spec||'')}" oninput="updateItem(${g.id},${i},'spec',this.value)" placeholder="規格/說明（可留空）" style="background:var(--bg3)"></div>
   `).join('');
-
-  const itemSelectOpts=g.items.map((it,i)=>`<option value="${i}">${it.name||'商品'+(i+1)} $${it.price||0}</option>`).join('');
-
+  const itemSelectOpts=g.items.map((it,i)=>`<option value="${i}">${esc(it.name||'商品'+(i+1))} $${it.price||0}</option>`).join('');
   const ordersHtml=g.orders.map((o,oi)=>`
     <div class="person-row">
       <div class="person-row-top">
-        <input type="text" value="${o.person||''}" oninput="updateOrder(${g.id},${oi},'person',this.value)" placeholder="訂購人姓名">
+        <input type="text" value="${esc(o.person||'')}" oninput="updateOrder(${g.id},${oi},'person',this.value)" placeholder="訂購人姓名">
         <button class="btn btn-danger btn-sm" onclick="removeOrder(${g.id},${oi})" style="flex-shrink:0;padding:0 12px">✕</button>
       </div>
       <div class="person-row-bottom">
@@ -404,43 +406,38 @@ function buildGroupCard(g){
       </div>
     </div>
   `).join('');
-
   const personTotalsHtml=people.map(person=>{
     const pOrders=g.orders.filter(o=>o.person===person);
     const amt=pOrders.reduce((s,o)=>{const it=g.items[o.itemIdx];return s+(it?parseFloat(it.price||0)*parseInt(o.qty||0):0);},0);
     const detail=pOrders.map(o=>{const it=g.items[o.itemIdx];return it?`${it.name}×${o.qty}`:'';}).filter(Boolean).join('、');
     return `<div class="person-total-row">
-      <div><div class="person-total-name">${person}</div><div class="person-total-detail">${detail}</div></div>
+      <div><div class="person-total-name">${esc(person)}</div><div class="person-total-detail">${esc(detail)}</div></div>
       <div class="person-total-amt">$${amt.toLocaleString()}</div>
     </div>`;
   }).join('');
 
   return `<div class="group-card" id="gc-${g.id}">
     <div class="group-card-header" onclick="toggleGroup(${g.id})">
-      <input class="group-name-input" value="${g.name}" oninput="updateGroup(${g.id},'name',this.value)" onclick="event.stopPropagation()" placeholder="團購名稱">
-      <span style="font-size:18px;color:var(--text3)" id="gc-arrow-${g.id}">›</span>
+      <input class="group-name-input" value="${esc(g.name)}" oninput="updateGroup(${g.id},'name',this.value)" onclick="event.stopPropagation()" placeholder="團購名稱">
+      <span style="font-size:18px;color:var(--text3);transition:transform 0.2s" id="gc-arrow-${g.id}">›</span>
     </div>
     <div class="group-card-body" id="gc-body-${g.id}">
-      ${org?`<div style="background:var(--blue-bg);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--blue-text)">👤 ${org.name}${org.payment?' · 💳 '+org.payment:''}${org.delivery?' · 📦 '+org.delivery:''}</div>`:''}
-      
+      ${org?`<div style="background:var(--blue-bg);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--blue-text)">👤 ${esc(org.name)}${org.payment?' · 💳 '+esc(org.payment):''}${org.delivery?' · 📦 '+esc(org.delivery):''}</div>`:''}
       <div class="field"><label>開團日期</label><input type="date" value="${g.date||''}" onchange="updateGroup(${g.id},'date',this.value)"></div>
       <div class="field"><label>團主</label>
         <select onchange="updateGroup(${g.id},'orgId',this.value)">
           <option value="">-- 選擇團主 --</option>
-          ${state.organizers.map(o=>`<option value="${o.id}" ${o.id==g.orgId?'selected':''}>${o.name}</option>`).join('')}
+          ${state.organizers.map(o=>`<option value="${o.id}" ${o.id==g.orgId?'selected':''}>${esc(o.name)}</option>`).join('')}
         </select>
       </div>
-      <div class="field"><label>開團資訊網址</label><input type="url" value="${g.url||''}" oninput="updateGroup(${g.id},'url',this.value)" placeholder="https://..."></div>
-      <div class="field"><label>備註</label><textarea oninput="updateGroup(${g.id},'note',this.value)" placeholder="備註說明…">${g.note||''}</textarea></div>
-
+      <div class="field"><label>開團資訊網址</label><input type="url" value="${esc(g.url||'')}" oninput="updateGroup(${g.id},'url',this.value)" placeholder="https://..."></div>
+      <div class="field"><label>備註</label><textarea oninput="updateGroup(${g.id},'note',this.value)" placeholder="備註說明…">${esc(g.note||'')}</textarea></div>
       <div class="divider"></div>
       <div class="section-header"><span class="card-title" style="margin:0">訂購商品</span><button class="btn btn-sm" onclick="addItem(${g.id})">＋ 新增</button></div>
       ${itemsHtml||`<div style="color:var(--text3);font-size:14px;text-align:center;padding:12px">尚無商品，點右上角新增</div>`}
-
       <div class="divider"></div>
       <div class="section-header"><span class="card-title" style="margin:0">訂購人記錄</span><button class="btn btn-sm" onclick="addOrder(${g.id})">＋ 新增</button></div>
       ${ordersHtml||`<div style="color:var(--text3);font-size:14px;text-align:center;padding:12px">尚無訂購人，點右上角新增</div>`}
-
       ${people.length?`
         <div class="divider"></div>
         <div class="card-title">金額匯總</div>
@@ -459,7 +456,6 @@ function buildGroupCard(g){
         </div>
         <div id="exp-${g.id}" class="export-box" style="display:none"></div>
       `:''}
-
       <div class="divider"></div>
       <div class="btn-row">
         <button class="btn btn-success" style="flex:1" onclick="closeGroup(${g.id})">結團 →</button>
@@ -469,6 +465,8 @@ function buildGroupCard(g){
   </div>`;
 }
 
+function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
 function toggleGroup(gid){
   const body=document.getElementById('gc-body-'+gid);
   const arrow=document.getElementById('gc-arrow-'+gid);
@@ -476,35 +474,34 @@ function toggleGroup(gid){
   if(arrow)arrow.style.transform=body.classList.contains('open')?'rotate(90deg)':'';
 }
 function updateGroup(gid,field,val){
-  const g=state.activeGroups.find(g=>g.id===gid);if(g){g[field]=val;saveState();}
+  const g=state.activeGroups.find(g=>g.id===gid);if(g){g[field]=val;scheduleSave();}
   if(field==='orgId')renderActive();
 }
 function addItem(gid){
   const g=state.activeGroups.find(g=>g.id===gid);
-  if(g){g.items.push({name:'',price:0,spec:''});saveState();renderActive();toggleGroup(gid);}
+  if(g){g.items.push({name:'',price:0,spec:''});scheduleSave();renderActive();toggleGroup(gid);}
 }
 function removeItem(gid,i){
   const g=state.activeGroups.find(g=>g.id===gid);
-  if(g){g.items.splice(i,1);g.orders=g.orders.filter(o=>o.itemIdx!==i).map(o=>({...o,itemIdx:o.itemIdx>i?o.itemIdx-1:o.itemIdx}));saveState();renderActive();toggleGroup(gid);}
+  if(g){g.items.splice(i,1);g.orders=g.orders.filter(o=>o.itemIdx!==i).map(o=>({...o,itemIdx:o.itemIdx>i?o.itemIdx-1:o.itemIdx}));scheduleSave();renderActive();toggleGroup(gid);}
 }
 function updateItem(gid,i,field,val){
-  const g=state.activeGroups.find(g=>g.id===gid);if(g){g.items[i][field]=val;saveState();}
+  const g=state.activeGroups.find(g=>g.id===gid);if(g){g.items[i][field]=val;scheduleSave();}
 }
 function addOrder(gid){
   const g=state.activeGroups.find(g=>g.id===gid);
-  if(g){g.orders.push({person:'',itemIdx:0,qty:1});saveState();renderActive();toggleGroup(gid);}
+  if(g){g.orders.push({person:'',itemIdx:0,qty:1});scheduleSave();renderActive();toggleGroup(gid);}
 }
 function removeOrder(gid,i){
   const g=state.activeGroups.find(g=>g.id===gid);
-  if(g){g.orders.splice(i,1);saveState();renderActive();toggleGroup(gid);}
+  if(g){g.orders.splice(i,1);scheduleSave();renderActive();toggleGroup(gid);}
 }
 function updateOrder(gid,i,field,val){
   const g=state.activeGroups.find(g=>g.id===gid);
-  if(g){g.orders[i][field]=val;saveState();
+  if(g){g.orders[i][field]=val;scheduleSave();
     if(field==='qty'||field==='itemIdx'){renderActive();toggleGroup(gid);}
   }
 }
-
 function buildExportText(g){
   const org=state.organizers.find(o=>o.id==g.orgId);
   const people=[...new Set(g.orders.map(o=>o.person).filter(Boolean))];
@@ -547,26 +544,24 @@ function closeGroup(gid){
   g.closedAt=new Date().toLocaleDateString('zh-TW');
   g.payments={};g.payNotes={};
   state.history.unshift(g);state.activeGroups.splice(idx,1);
-  saveState();renderActive();showToast('已結團');
+  scheduleSave();renderActive();showToast('已結團 ✓');
 }
 function deleteGroup(gid){
   if(!confirm('確定刪除此開團？'))return;
   state.activeGroups=state.activeGroups.filter(g=>g.id!==gid);
-  saveState();renderActive();
+  scheduleSave();renderActive();
 }
 
+// ── History ──
 function renderHistory(){
   const el=document.getElementById('page-history');
-  if(!state.history.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon">📦</div><div class="empty-text">尚無歷史紀錄<br>結團後會出現在這裡</div></div>`;return;
-  }
+  if(!state.history.length){el.innerHTML=`<div class="empty"><div class="empty-icon">📦</div><div class="empty-text">尚無歷史紀錄<br>結團後會出現在這裡</div></div>`;return;}
   el.innerHTML=state.history.map((g,gi)=>{
     const org=state.organizers.find(o=>o.id==g.orgId);
     const people=[...new Set(g.orders.map(o=>o.person).filter(Boolean))];
     const grand=g.orders.reduce((s,o)=>{const it=g.items[o.itemIdx];return s+(it?parseFloat(it.price||0)*parseInt(o.qty||0):0);},0);
     if(!g.payments)g.payments={};if(!g.payNotes)g.payNotes={};
     const paidCount=people.filter(p=>g.payments[p]).length;
-
     const checkRows=people.map(person=>{
       const orders=g.orders.filter(o=>o.person===person);
       const total=orders.reduce((s,o)=>{const it=g.items[o.itemIdx];return s+(it?parseFloat(it.price||0)*parseInt(o.qty||0):0);},0);
@@ -575,9 +570,9 @@ function renderHistory(){
       return `<div class="check-row">
         <input type="checkbox" ${paid?'checked':''} onchange="togglePaid(${gi},'${person}',this.checked)">
         <div class="check-row-info">
-          <div class="check-row-name ${paid?'paid':''}">${person}</div>
-          <div class="check-row-detail">${detail}</div>
-          <input type="text" value="${g.payNotes[person]||''}" oninput="updatePayNote(${gi},'${person}',this.value)" placeholder="付款方式/備註" style="margin-top:6px;font-size:14px;background:var(--bg2)">
+          <div class="check-row-name ${paid?'paid':''}">${esc(person)}</div>
+          <div class="check-row-detail">${esc(detail)}</div>
+          <input type="text" value="${esc(g.payNotes[person]||'')}" oninput="updatePayNote(${gi},'${person}',this.value)" placeholder="付款方式/備註" style="margin-top:6px;font-size:14px;background:var(--bg2)">
         </div>
         <div class="check-row-right">
           <div class="check-row-amt ${paid?'paid':''}">$${total.toLocaleString()}</div>
@@ -585,24 +580,20 @@ function renderHistory(){
         </div>
       </div>`;
     }).join('');
-
     return `<div class="hist-card">
       <div class="hist-header" onclick="toggleHist(${gi})">
-        <div class="hist-header-top">
-          <span class="hist-title">${g.name}</span>
-          <span style="font-size:18px;color:var(--text3)" id="ha-${gi}">›</span>
-        </div>
-        <div class="hist-meta">${g.closedAt||''}${org?' · '+org.name:''}</div>
+        <div class="hist-header-top"><span class="hist-title">${esc(g.name)}</span><span style="font-size:18px;color:var(--text3);transition:transform 0.2s" id="ha-${gi}">›</span></div>
+        <div class="hist-meta">${g.closedAt||''}${org?' · '+esc(org.name):''}</div>
         <div class="hist-badges">
           <span class="badge badge-blue">$${grand.toLocaleString()}</span>
           <span class="badge ${paidCount===people.length&&people.length?'badge-green':'badge-gray'}">${paidCount}/${people.length} 已付</span>
         </div>
       </div>
       <div class="hist-body" id="hb-${gi}">
-        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">${g.items.map(i=>i.name+' $'+i.price).join(' · ')}</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">${g.items.map(i=>esc(i.name)+' $'+i.price).join(' · ')}</div>
         ${checkRows||'<div style="color:var(--text3);text-align:center;padding:12px">無訂購紀錄</div>'}
-        ${g.note?`<div style="font-size:13px;color:var(--text2);margin-top:10px">備註：${g.note}</div>`:''}
-        ${g.url?`<div style="margin-top:8px"><a href="${g.url}" style="color:var(--blue);font-size:13px">開團資訊連結 ↗</a></div>`:''}
+        ${g.note?`<div style="font-size:13px;color:var(--text2);margin-top:10px">備註：${esc(g.note)}</div>`:''}
+        ${g.url?`<div style="margin-top:8px"><a href="${esc(g.url)}" style="color:var(--blue);font-size:13px">開團資訊連結 ↗</a></div>`:''}
         <div class="btn-row" style="margin-top:14px">
           <button class="btn btn-sm" onclick="copyHistExport(${gi})">📋 複製訂單</button>
           <button class="btn btn-danger btn-sm" onclick="deleteHist(${gi})">刪除</button>
@@ -619,16 +610,16 @@ function toggleHist(gi){
 }
 function togglePaid(gi,person,val){
   if(!state.history[gi].payments)state.history[gi].payments={};
-  state.history[gi].payments[person]=val;saveState();renderHistory();
+  state.history[gi].payments[person]=val;scheduleSave();renderHistory();
   setTimeout(()=>{const b=document.getElementById('hb-'+gi);if(b)b.classList.add('open');},50);
 }
 function updatePayNote(gi,person,val){
   if(!state.history[gi].payNotes)state.history[gi].payNotes={};
-  state.history[gi].payNotes[person]=val;saveState();
+  state.history[gi].payNotes[person]=val;scheduleSave();
 }
 function deleteHist(gi){
   if(!confirm('確定刪除？'))return;
-  state.history.splice(gi,1);saveState();renderHistory();
+  state.history.splice(gi,1);scheduleSave();renderHistory();
 }
 function copyHistExport(gi){
   const g=state.history[gi];
@@ -646,8 +637,6 @@ function copyHistExport(gi){
   });
   navigator.clipboard.writeText(txt).then(()=>showToast('已複製 ✓')).catch(()=>showToast('複製失敗'));
 }
-
-renderContacts();
 </script>
 </body>
 </html>
