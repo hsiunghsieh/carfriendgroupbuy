@@ -115,15 +115,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
 .empty-icon{font-size:40px;margin-bottom:12px}
 .empty-text{font-size:15px}
-.img-upload-area{border:2px dashed var(--border2);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;background:var(--bg2);transition:border-color 0.2s;margin-bottom:8px}
-.img-upload-area:active{border-color:var(--blue);background:var(--blue-bg)}
-.img-upload-icon{font-size:32px;margin-bottom:6px}
-.img-upload-label{font-size:14px;color:var(--text2)}
-.img-preview{width:100%;border-radius:var(--radius);overflow:hidden;margin-bottom:8px;position:relative}
-.img-preview img{width:100%;max-height:220px;object-fit:cover;display:block;border-radius:var(--radius)}
-.img-preview-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.img-uploading{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);padding:10px 0}
-.img-spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
 .fab{position:fixed;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0));right:16px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(24,95,165,0.4);z-index:90;transition:all 0.15s}
 .fab:active{transform:scale(0.92)}
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
@@ -441,15 +432,6 @@ function buildGroupCard(g){
       </div>
       <div class="field"><label>開團資訊網址</label><input type="url" value="${esc(g.url||'')}" oninput="updateGroup(${g.id},'url',this.value)" placeholder="https://..."></div>
       <div class="field"><label>備註</label><textarea oninput="updateGroup(${g.id},'note',this.value)" placeholder="備註說明…">${esc(g.note||'')}</textarea></div>
-      <div class="field">
-        <label>商品截圖</label>
-        ${g.imgUrl
-          ? `<div class="img-preview"><img src="${esc(g.imgUrl)}" alt="商品圖" onerror="this.parentElement.style.display='none'"><button class="img-preview-remove" onclick="removeGroupImg(${g.id})" title="移除">✕</button></div>`
-          : `<div class="img-upload-area" onclick="document.getElementById('img-input-${g.id}').click()"><div class="img-upload-icon">📷</div><div class="img-upload-label">點此選擇截圖上傳</div></div>`
-        }
-        <div id="img-status-${g.id}"></div>
-        <input type="file" id="img-input-${g.id}" accept="image/*" style="display:none" onchange="uploadGroupImg(${g.id},this)">
-      </div>
       <div class="divider"></div>
       <div class="section-header"><span class="card-title" style="margin:0">訂購商品</span><button class="btn btn-sm" onclick="addItem(${g.id})">＋ 新增</button></div>
       ${itemsHtml||`<div style="color:var(--text3);font-size:14px;text-align:center;padding:12px">尚無商品，點右上角新增</div>`}
@@ -654,48 +636,6 @@ function copyHistExport(gi){
     txt+=`${person}：${detail} $${total.toLocaleString()} [${paid}]${note}\n`;
   });
   navigator.clipboard.writeText(txt).then(()=>showToast('已複製 ✓')).catch(()=>showToast('複製失敗'));
-}
-
-// ── Imgur Image Upload ──
-const IMGUR_CLIENT_ID = '546c25a59c58ad7'; // 公開免費 Client ID
-
-async function uploadGroupImg(gid, input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) { showToast('圖片不能超過 10MB'); return; }
-
-  const statusEl = document.getElementById('img-status-' + gid);
-  if (statusEl) statusEl.innerHTML = '<div class="img-uploading"><div class="img-spinner"></div>上傳中，請稍候…</div>';
-
-  try {
-    const formData = new FormData();
-    formData.append('image', file);
-    const res = await fetch('https://api.imgur.com/3/image', {
-      method: 'POST',
-      headers: { Authorization: 'Client-ID ' + IMGUR_CLIENT_ID },
-      body: formData
-    });
-    const data = await res.json();
-    if (data.success) {
-      const g = state.activeGroups.find(g => g.id === gid);
-      if (g) { g.imgUrl = data.data.link; scheduleSave(); }
-      showToast('圖片上傳成功 ✓');
-      renderActive();
-      // re-open the card
-      setTimeout(() => toggleGroup(gid), 50);
-    } else {
-      throw new Error('Imgur 回傳失敗');
-    }
-  } catch (e) {
-    if (statusEl) statusEl.innerHTML = '';
-    showToast('上傳失敗，請確認網路後再試');
-  }
-}
-
-function removeGroupImg(gid) {
-  if (!confirm('確定移除圖片？')) return;
-  const g = state.activeGroups.find(g => g.id === gid);
-  if (g) { g.imgUrl = ''; scheduleSave(); renderActive(); setTimeout(() => toggleGroup(gid), 50); }
 }
 </script>
 </body>
